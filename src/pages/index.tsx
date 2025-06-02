@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ref, get } from "firebase/database";
+import { ref, get, update } from "firebase/database";
 import { db } from "@/lib/firebase";
 import Navbar from "@/components/Navbar";
 import MemoryCard from "@/components/MemoryCard";
@@ -15,6 +15,22 @@ type Memory = {
 
 export default function HomePage() {
   const [memories, setMemories] = useState<Memory[]>([]);
+
+    const toggleFavorite = async (id: string, current: boolean) => {
+    try {
+      const memoryRef = ref(db, `memories/${id}`);
+      await update(memoryRef, { isFavorite: !current });
+
+      // Local olarak da güncelle
+      setMemories(prev =>
+        prev.map(mem =>
+          mem.id === id ? { ...mem, isFavorite: !current } : mem
+        )
+      );
+    } catch (err) {
+      console.error("Favori güncellenemedi:", err);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +83,7 @@ export default function HomePage() {
             imageUrl={memory.imageUri}
             date={memory.date}
             isFavorite={memory.isFavorite}
+            onToggleFavorite={toggleFavorite}
           />
         ))}
       </main>

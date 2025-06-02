@@ -43,11 +43,12 @@ export default function ProfilePage() {
       <div
         style={{
           maxWidth: '600px',
-          margin: '0 auto',
+          margin: '2rem auto',
           backgroundColor: 'white',
           borderRadius: '16px',
           padding: '2rem',
           boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
+          position: 'relative',
         }}
       >
         <button
@@ -99,9 +100,12 @@ export default function ProfilePage() {
                 borderRadius: '12px',
                 padding: '1rem 1.5rem',
                 textAlign: 'center',
+                transition: 'all 0.3s',
+                cursor: 'default',
               }}
+              title="Toplam anı sayısı"
             >
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>{total}</h3>
+              <div style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>📝 {total}</div>
               <p style={{ fontSize: '0.9rem' }}>Anı</p>
             </div>
 
@@ -111,20 +115,55 @@ export default function ProfilePage() {
                 borderRadius: '12px',
                 padding: '1rem 1.5rem',
                 textAlign: 'center',
+                transition: 'all 0.3s',
+                cursor: 'default',
               }}
+              title="Favori anılar"
             >
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>{favorites}</h3>
+              <div style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>⭐ {favorites}</div>
               <p style={{ fontSize: '0.9rem' }}>Favori</p>
             </div>
           </div>
 
-          <div style={{ textAlign: 'left' }}>
-            <p style={{ marginBottom: '0.5rem' }}>🎨 Tema</p>
-            <p style={{ marginBottom: '0.5rem' }}>🌐 Dil</p>
+          <div style={{ textAlign: 'left', padding: '0 1rem' }}>
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>🎨 Tema</label>
+              <select
+                style={{
+                  marginLeft: '1rem',
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ddd',
+                  backgroundColor: '#f9f9f9',
+                }}
+                defaultValue="light"
+              >
+                <option value="light">Açık</option>
+                <option value="dark">Koyu</option>
+              </select>
+            </div>
+
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>🌐 Dil</label>
+              <select
+                style={{
+                  marginLeft: '2.7rem',
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ddd',
+                  backgroundColor: '#f9f9f9',
+                }}
+                defaultValue="tr"
+              >
+                <option value="tr">Türkçe</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+
             <button
               onClick={() => alert('Çıkış yapılmadı çünkü auth yok :)')}
               style={{
-                marginTop: '1rem',
+                marginTop: '1.5rem',
                 backgroundColor: '#ffb4b4',
                 border: 'none',
                 borderRadius: '8px',

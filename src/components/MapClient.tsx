@@ -6,10 +6,17 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { ref, get } from 'firebase/database';
 import { db } from '@/lib/firebase';
+import Link from 'next/link';
 
-// 📌 Varsayılan marker ikon ayarı
 const defaultIcon = new L.Icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png',
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
+
+const favoriteIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -20,6 +27,7 @@ type Memory = {
   title: string;
   lat: number;
   lng: number;
+  isFavorite?: boolean;
 };
 
 export default function MapClient() {
@@ -37,6 +45,7 @@ export default function MapClient() {
               title: value.title || 'Başlıksız',
               lat: value.lat,
               lng: value.lng,
+              isFavorite: value.isFavorite || false,
             }))
             .filter((m) => m.lat && m.lng)
         : [];
@@ -48,7 +57,26 @@ export default function MapClient() {
   }, []);
 
   return (
-    <div style={{ height: '100vh', width: '100%' }}>
+    <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
+      <Link
+        href="/"
+        style={{
+          position: 'absolute',
+          top: '20px',
+          right: '20px',
+          zIndex: 9999,
+          backgroundColor: '#f0f0f0',
+          borderRadius: '8px',
+          padding: '0.5rem 1rem',
+          textDecoration: 'none',
+          fontWeight: 600,
+          color: '#0a0a0a',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+        }}
+      >
+        ← Geri
+      </Link>
+
       <MapContainer
         center={[39.925533, 32.866287]}
         zoom={6}
@@ -63,7 +91,7 @@ export default function MapClient() {
           <Marker
             key={memory.id}
             position={[memory.lat, memory.lng]}
-            icon={defaultIcon}
+            icon={memory.isFavorite ? favoriteIcon : defaultIcon}
           >
             <Popup>{memory.title}</Popup>
           </Marker>

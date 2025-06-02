@@ -1,7 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { ref, update } from "firebase/database";
-import { db } from "@/lib/firebase";
 
 type Props = {
   id: string;
@@ -10,13 +8,21 @@ type Props = {
   imageUrl?: string;
   date: string;
   isFavorite?: boolean;
+  onToggleFavorite?: (id: string, current: boolean) => void;
 };
 
-const MemoryCard: React.FC<Props> = ({ id, title, description, imageUrl, date, isFavorite }) => {
-  const toggleFavorite = async () => {
-    await update(ref(db, `memories/${id}`), {
-      isFavorite: !isFavorite,
-    });
+const MemoryCard: React.FC<Props> = ({
+  id,
+  title,
+  description,
+  imageUrl,
+  date,
+  isFavorite,
+  onToggleFavorite,
+}) => {
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // link'e tıklamayı engelle
+    onToggleFavorite?.(id, isFavorite ?? false); // props'tan gelen fonksiyonu çalıştır
   };
 
   return (
@@ -71,45 +77,39 @@ const MemoryCard: React.FC<Props> = ({ id, title, description, imageUrl, date, i
         {description}
       </p>
 
-<button
-  onClick={(e) => {
-    e.preventDefault();
-    toggleFavorite();
-  }}
-  style={{
-    position: 'absolute',
-    top: '1rem',
-    right: '1rem',
-    backgroundColor: '#fff',
-    border: 'none',
-    borderRadius: '50%',
-    padding: '0.4rem',
-    cursor: 'pointer',
-  }}
-  title="Favorilere ekle/kaldır"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill={isFavorite ? '#f4b400' : 'none'}
-    stroke={isFavorite ? '#f4b400' : '#ccc'}
-    strokeWidth="2"
-    viewBox="0 0 24 24"
-    width="24"
-    height="24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M12 17.27L18.18 21 16.54 13.97 22 9.24
-         14.81 8.63 12 2 9.19 8.63 2 9.24
-         7.45 13.97 5.82 21z"
-    />
-  </svg>
-</button>
-
-
-
-
+      {/* ⭐ Favori butonu */}
+      <button
+        onClick={handleFavoriteClick}
+        style={{
+          position: 'absolute',
+          top: '1rem',
+          right: '1rem',
+          backgroundColor: '#fff',
+          border: 'none',
+          borderRadius: '50%',
+          padding: '0.4rem',
+          cursor: 'pointer',
+        }}
+        title="Favorilere ekle/kaldır"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill={isFavorite ? '#f4b400' : 'none'}
+          stroke={isFavorite ? '#f4b400' : '#ccc'}
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 17.27L18.18 21 16.54 13.97 22 9.24
+              14.81 8.63 12 2 9.19 8.63 2 9.24
+              7.45 13.97 5.82 21z"
+          />
+        </svg>
+      </button>
     </Link>
   );
 };
